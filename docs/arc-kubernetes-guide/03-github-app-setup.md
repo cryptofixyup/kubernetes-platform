@@ -22,7 +22,11 @@ Install the app on the target organization or repository and record:
 
 ```bash
 kubectl create namespace arc-runners --dry-run=client -o yaml | kubectl apply -f -
-kubectl create secret generic github-app-secret       --namespace arc-runners       --from-literal=github_app_id='123456'       --from-literal=github_app_installation_id='7890123'       --from-file=github_app_private_key=./github-app.pem
+kubectl create secret generic github-app-secret \
+  --namespace arc-runners \
+  --from-literal=github_app_id='123456' \
+  --from-literal=github_app_installation_id='7890123' \
+  --from-file=github_app_private_key=./github-app.pem
 ```
 
 Reference the secret from each runner scale set:

@@ -26,6 +26,10 @@ echo "[ok] Connected to cluster context: $context"
 
 nodes=$(kubectl get nodes --no-headers 2>/dev/null | wc -l | tr -d ' ')
 echo "[ok] Nodes discovered: $nodes"
+if [[ "$nodes" -eq 0 ]]; then
+  echo "[error] No nodes found in the current cluster context"
+  exit 1
+fi
 
 default_sc=$(kubectl get storageclass 2>/dev/null | awk '/\(default\)/ {print $1; exit}')
 if [[ -n "$default_sc" ]]; then
