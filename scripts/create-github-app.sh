@@ -79,21 +79,25 @@ GitHub App requirements:
   - Organization permissions: Self-hosted runners (read/write)
 EOF
 
-namespace_manifest=$(kubectl create namespace "$RUNNER_NS" --dry-run=client -o yaml)
-secret_manifest=$(kubectl create secret generic "$SECRET_NAME" \
-  --namespace "$RUNNER_NS" \
-  --from-literal=github_app_id="$GITHUB_APP_ID" \
-  --from-literal=github_app_installation_id="$GITHUB_APP_INSTALLATION_ID" \
-  --from-file=github_app_private_key="$GITHUB_APP_PRIVATE_KEY_FILE" \
-  --dry-run=client -o yaml)
-
 if [[ "$DRY_RUN" -eq 1 ]]; then
+  namespace_manifest=$(kubectl create namespace "$RUNNER_NS" --dry-run=client -o yaml)
+  secret_manifest=$(kubectl create secret generic "$SECRET_NAME" \
+    --namespace "$RUNNER_NS" \
+    --from-literal=github_app_id="$GITHUB_APP_ID" \
+    --from-literal=github_app_installation_id="$GITHUB_APP_INSTALLATION_ID" \
+    --from-file=github_app_private_key="$GITHUB_APP_PRIVATE_KEY_FILE" \
+    --dry-run=client -o yaml)
   printf '%s\n---\n%s\n' "$namespace_manifest" "$secret_manifest"
   exit 0
 fi
 
-printf '%s\n' "$namespace_manifest" | kubectl apply -f -
-printf '%s\n' "$secret_manifest" | kubectl apply -f -
+kubectl create namespace "$RUNNER_NS" --dry-run=client -o yaml | kubectl apply -f -
+kubectl create secret generic "$SECRET_NAME" \
+  --namespace "$RUNNER_NS" \
+  --from-literal=github_app_id="$GITHUB_APP_ID" \
+  --from-literal=github_app_installation_id="$GITHUB_APP_INSTALLATION_ID" \
+  --from-file=github_app_private_key="$GITHUB_APP_PRIVATE_KEY_FILE" \
+  --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Created/updated secret '$SECRET_NAME' in namespace '$RUNNER_NS'."
 echo "Restart listeners after rotation if you need immediate pickup:"
