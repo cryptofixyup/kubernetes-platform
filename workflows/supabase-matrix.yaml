@@ -37,19 +37,19 @@ jobs:
           cache: npm
 
       - uses: supabase/setup-cli@v1
-        if: matrix.runner == 'supabase-runners'
+        if: ${{ matrix.runner == 'supabase-runners' }}
         with:
           version: latest
 
       - run: npm ci
 
       - name: Optional bootstrap
-        if: matrix.bootstrap != ''
+        if: ${{ matrix.bootstrap != '' }}
         run: ${{ matrix.bootstrap }}
 
       - name: Execute job command
         run: ${{ matrix.command }}
 
       - name: Optional teardown
-        if: always() && matrix.teardown != ''
+        if: ${{ always() && matrix.teardown != '' }}
         run: ${{ matrix.teardown }}
