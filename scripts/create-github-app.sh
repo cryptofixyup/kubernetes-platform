@@ -68,7 +68,7 @@ done
 : "${GITHUB_APP_PRIVATE_KEY_FILE:?Set GITHUB_APP_PRIVATE_KEY_FILE or pass --private-key-file}"
 
 if [[ ! -f "$GITHUB_APP_PRIVATE_KEY_FILE" ]]; then
-  echo "Private key file not found: $GITHUB_APP_PRIVATE_KEY_FILE"
+  echo "Private key file not found: $GITHUB_APP_PRIVATE_KEY_FILE" >&2
   exit 1
 fi
 
