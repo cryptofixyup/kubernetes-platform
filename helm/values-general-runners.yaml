@@ -1,0 +1,45 @@
+githubConfigUrl: "https://github.com/YOUR_ORG"
+githubConfigSecret: github-app-secret
+
+runnerScaleSetName: general-runners
+runnerScaleSetLabels:
+  - general-runners
+
+minRunners: 1
+maxRunners: 10
+
+listenerTemplate:
+  spec:
+    containers:
+      - name: listener
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+
+template:
+  spec:
+    nodeSelector:
+      workload: ci-general
+    tolerations:
+      - key: "workload"
+        operator: "Equal"
+        value: "ci-general"
+        effect: "NoSchedule"
+    containers:
+      - name: runner
+        env:
+          - name: ACTIONS_RUNNER_HOOK_JOB_STARTED
+            value: /bin/true
+        resources:
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+            ephemeral-storage: "4Gi"
+          limits:
+            cpu: "2"
+            memory: "4Gi"
+            ephemeral-storage: "8Gi"

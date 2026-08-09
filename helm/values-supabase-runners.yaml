@@ -1,0 +1,52 @@
+githubConfigUrl: "https://github.com/YOUR_ORG"
+githubConfigSecret: github-app-secret
+
+runnerScaleSetName: supabase-runners
+runnerScaleSetLabels:
+  - supabase-runners
+  - docker
+  - supabase
+
+minRunners: 0
+maxRunners: 5
+
+containerMode:
+  type: dind
+
+listenerTemplate:
+  spec:
+    containers:
+      - name: listener
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+
+template:
+  spec:
+    nodeSelector:
+      workload: ci-supabase
+    tolerations:
+      - key: "workload"
+        operator: "Equal"
+        value: "ci-supabase"
+        effect: "NoSchedule"
+    containers:
+      - name: runner
+        env:
+          - name: DOCKER_BUILDKIT
+            value: "1"
+          - name: RUNNER_WAIT_FOR_DOCKER_IN_SECONDS
+            value: "180"
+        resources:
+          requests:
+            cpu: "2"
+            memory: "8Gi"
+            ephemeral-storage: "20Gi"
+          limits:
+            cpu: "4"
+            memory: "12Gi"
+            ephemeral-storage: "40Gi"
