@@ -100,7 +100,16 @@ export default function Chat({ authToken, userId }) {
           </div>
         ))}
       </div>
-      <input value={input} onChange={(event) => setInput(event.target.value)} />
+      <input
+        aria-label="Chat message"
+        value={input}
+        onChange={(event) => setInput(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            handleSend();
+          }
+        }}
+      />
       <button type="button" onClick={handleSend} disabled={isStreaming}>
         {isStreaming ? "Streaming..." : "Send"}
       </button>

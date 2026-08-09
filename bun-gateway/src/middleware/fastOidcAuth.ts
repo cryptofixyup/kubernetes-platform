@@ -5,7 +5,7 @@ export async function verifyOidcToken(authHeader: string | null) {
 
   const token = authHeader.split(" ")[1];
 
-  if (token === "test_token") {
+  if (process.env.NODE_ENV !== "production" && token === "test_token") {
     return { sub: "user_123", tier: "pro", language: "English" };
   }
 
