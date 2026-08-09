@@ -39,7 +39,7 @@ jobs:
       - uses: supabase/setup-cli@v1
         if: ${{ matrix.bootstrap != '' }}
         with:
-          version: latest
+          version: 2.113.0
 
       - run: npm ci
 

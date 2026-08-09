@@ -6,11 +6,22 @@ Register an organization-owned GitHub App with these settings:
 
 - **Homepage URL:** `https://github.com/actions/actions-runner-controller`
 - **Webhook:** not required for ARC scale sets.
-- **Repository permissions:**
-  - `Administration: Read and write` for repository-scoped runners.
-  - `Metadata: Read-only`.
-- **Organization permissions:**
-  - `Self-hosted runners: Read and write`.
+- **Primary recommendation (organization-level ARC):**
+  - **Organization permissions:** `Self-hosted runners: Read and write`
+  - **Repository permissions:** `Metadata: Read-only`
+
+### Repository-scoped variant
+
+Use this only when you must restrict ARC to one or a small set of repositories instead of managing runners centrally at the organization level.
+
+- Keep the baseline **Repository permissions:** `Metadata: Read-only`
+- Add only this extra repository-scoped permission: `Administration: Read and write`
+
+Security trade-off:
+
+- tighter installation scope can reduce blast radius for a single repository deployment
+- but `Administration: Read and write` is broader than the organization-level self-hosted runner permission and increases repo-level control if the app is compromised
+- you also give up the cleaner organization-level runner-group model for sharing hardened runners across repositories
 
 Install the app on the target organization or repository and record:
 
@@ -78,3 +89,4 @@ kubectl rollout restart deployment -n arc-runners -l app.kubernetes.io/component
 - Store the PEM outside Git, ideally in a vault or sealed-secret workflow.
 - Restrict secret read access to the runner namespace.
 - Use org runner groups to limit which repos can target each scale set.
+- Prefer the organization-level permission model unless a repository-scoped deployment is a deliberate security requirement.

@@ -25,6 +25,7 @@ kubectl logs -n arc-runners -l app.kubernetes.io/component=runner-scale-set-list
 | `401` or `403` in listener logs | bad app ID, installation ID, or key | recreate secret and restart listener |
 | Pods pending | insufficient CPU, memory, or taint mismatch | `kubectl describe pod` and node events |
 | Docker daemon never becomes ready | DinD sidecar starved or blocked by PodSecurity | inspect runner pod logs for `dind` container |
+| Runner exits with `OOMKilled` | DinD memory request too small for Docker + Supabase burst usage | inspect both `runner` and `dind` container status and events before lowering requests |
 | Registration succeeds, job never assigned | runner group or repo scope mismatch | verify `githubConfigUrl` and runner group mapping |
 | Long cold starts | image pulls and node scale-up delay | inspect node autoscaler and pre-pull strategy |
 
@@ -42,7 +43,12 @@ kubectl logs -n arc-runners -l app.kubernetes.io/component=runner-scale-set-list
 kubectl top pods -n arc-runners
 kubectl describe pod <runner-pod> -n arc-runners
 kubectl get events -n arc-runners --sort-by=.lastTimestamp
+kubectl get pod <runner-pod> -n arc-runners -o jsonpath='{range .status.containerStatuses[*]}{.name}{" => "}{.restartCount}{" restarts, last reason="}{.lastState.terminated.reason}{"\n"}{end}'
+kubectl logs <runner-pod> -n arc-runners -c runner --tail=200
+kubectl logs <runner-pod> -n arc-runners -c dind --tail=200
 ```
+
+If either container shows `OOMKilled`, keep the `8Gi` request baseline for Supabase runners and investigate image churn, service count, and node overcommit before attempting to optimize downward.
 
 ## Network validation
 

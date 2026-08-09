@@ -33,3 +33,8 @@ Prefer GitHub environments for promotion-specific secrets.
 - `general-runners` jobs should start in seconds when warm runners exist.
 - `supabase-runners` jobs may spend extra time pulling Docker images on cold nodes.
 - Runners should deregister automatically after each job completes.
+- Pin `supabase/setup-cli@v1` to a specific CLI release (the bundled examples use `2.113.0`) so database test environments are reproducible and upgrades happen intentionally.
+
+## DinD memory reminder
+
+Supabase integration jobs run inside ARC's DinD model, where the job pod includes both the GitHub runner container and a privileged Docker daemon container. Keep the Supabase runner memory request at `8Gi` unless you have measured lower peak usage safely across image pulls, daemon startup, and Supabase service boot.

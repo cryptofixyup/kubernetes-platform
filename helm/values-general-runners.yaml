@@ -2,7 +2,7 @@ githubConfigUrl: "https://github.com/YOUR_ORG"
 githubConfigSecret: github-app-secret
 
 runnerScaleSetName: general-runners
-scaleSetLabels:
+runnerScaleSetLabels:
   - general-runners
 
 minRunners: 1
