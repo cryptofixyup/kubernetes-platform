@@ -19,11 +19,22 @@ if ! kubectl get secret "$SECRET_NAME" -n "$RUNNER_NS" >/dev/null 2>&1; then
   exit 1
 fi
 
-helm upgrade --install arc       --namespace "$CONTROLLER_NS"       --create-namespace       -f "$ROOT_DIR/helm/values-controller.yaml"       oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+helm upgrade --install arc \
+  --namespace "$CONTROLLER_NS" \
+  --create-namespace \
+  -f "$ROOT_DIR/helm/values-controller.yaml" \
+  oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
 
-helm upgrade --install general-runners       --namespace "$RUNNER_NS"       --create-namespace       -f "$ROOT_DIR/helm/values-general-runners.yaml"       oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+helm upgrade --install general-runners \
+  --namespace "$RUNNER_NS" \
+  --create-namespace \
+  -f "$ROOT_DIR/helm/values-general-runners.yaml" \
+  oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
-helm upgrade --install supabase-runners       --namespace "$RUNNER_NS"       -f "$ROOT_DIR/helm/values-supabase-runners.yaml"       oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+helm upgrade --install supabase-runners \
+  --namespace "$RUNNER_NS" \
+  -f "$ROOT_DIR/helm/values-supabase-runners.yaml" \
+  oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
 kubectl get deploy -n "$CONTROLLER_NS"
 kubectl get autoscalingrunnersets -n "$RUNNER_NS"

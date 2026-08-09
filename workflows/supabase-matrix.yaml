@@ -37,7 +37,7 @@ jobs:
           cache: npm
 
       - uses: supabase/setup-cli@v1
-        if: ${{ matrix.runner == 'supabase-runners' }}
+        if: ${{ matrix.bootstrap != '' }}
         with:
           version: latest
 

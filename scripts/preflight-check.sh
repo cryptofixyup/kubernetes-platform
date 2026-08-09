@@ -13,6 +13,10 @@ for tool in "${required_tools[@]}"; do
   fi
 done
 
+if [[ "$fail" -ne 0 ]]; then
+  exit "$fail"
+fi
+
 context=$(kubectl config current-context 2>/dev/null || true)
 if [[ -z "$context" ]]; then
   echo "[error] kubectl has no current context"
