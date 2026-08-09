@@ -33,7 +33,7 @@ Expected healthy output after installation:
 ```text
 NAME                MIN   MAX   CURRENT   READY
 general-runners     1     10    1         1
-supabase-runners    0     6     0         0
+supabase-runners    0     5     0         0
 ```
 
 ## Guide map
