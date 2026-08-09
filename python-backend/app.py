@@ -70,7 +70,8 @@ async def stream_generator(agent, question: str, thread_id: str):
 
         yield "data: [DONE]\n\n"
     except Exception as exc:
-        yield f"data: [ERROR] {str(exc)}\n\n"
+        print(f"Streaming error: {exc}")
+        yield "data: [ERROR] Unable to process request\n\n"
 
 
 @app.post("/api/v1/chat/stream")
