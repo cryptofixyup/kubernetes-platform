@@ -62,7 +62,7 @@ export default function Chat({ authToken, userId }) {
               continue;
             }
 
-            const text = line.replace("data: ", "");
+            const text = line.slice("data: ".length);
 
             if (text === "[DONE]") {
               done = true;

@@ -38,6 +38,7 @@ docker-compose up --build
 - The Bun gateway proxies authenticated chat requests to the Python backend.
 - Stripe webhooks are queued through Redis before asynchronous worker processing.
 - The React frontend file is a minimal component scaffold and expects `VITE_BACKEND_URL` when used outside local development.
+- The gateway currently uses permissive wildcard CORS for local development and should be restricted before broader deployment.
 - The auth middleware, rate limiter, and webhook persistence logic are local-development stubs and must be replaced before production use.
 - The default Postgres values are for local development only and should be overridden in any shared or production environment.
 - The `.claude`, `.codex`, and `.agents` directories remain repository tooling metadata.

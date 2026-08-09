@@ -36,6 +36,7 @@ worker.on("failed", (job, err) => {
 });
 
 async function executeDatabaseUpdateSafe(customerId: string, targetTier: string, eventId: string) {
+  // Local scaffold stub: replace this with real persistence before relying on webhook processing.
   console.log(`💾 Updated ${customerId} to ${targetTier}. Saved event: ${eventId}`);
   return "updated";
 }
