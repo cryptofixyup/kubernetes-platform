@@ -72,13 +72,6 @@ if [[ ! -f "$GITHUB_APP_PRIVATE_KEY_FILE" ]]; then
   exit 1
 fi
 
-cat >&2 <<'EOF'
-GitHub App requirements:
-  - Homepage URL: https://github.com/actions/actions-runner-controller
-  - Repository permissions: Administration (read/write for repo-scoped runners), Metadata (read-only)
-  - Organization permissions: Self-hosted runners (read/write)
-EOF
-
 if [[ "$DRY_RUN" -eq 1 ]]; then
   namespace_manifest=$(kubectl create namespace "$RUNNER_NS" --dry-run=client -o yaml)
   secret_manifest=$(kubectl create secret generic "$SECRET_NAME" \
