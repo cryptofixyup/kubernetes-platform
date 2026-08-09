@@ -41,7 +41,7 @@ scripts/
 
 1. Read [`docs/arc-kubernetes-guide/01-prerequisites.md`](docs/arc-kubernetes-guide/01-prerequisites.md).
 2. Run [`scripts/preflight-check.sh`](scripts/preflight-check.sh) against your cluster.
-3. Create a GitHub App by following [`docs/arc-kubernetes-guide/03-github-app-setup.md`](docs/arc-kubernetes-guide/03-github-app-setup.md).
+3. Create the GitHub App secret with [`scripts/create-github-app.sh`](scripts/create-github-app.sh) as described in [`docs/arc-kubernetes-guide/03-github-app-setup.md`](docs/arc-kubernetes-guide/03-github-app-setup.md).
 4. Install ARC with [`scripts/install-arc.sh`](scripts/install-arc.sh).
 5. Copy the example workflows from [`workflows/`](workflows/) into `.github/workflows/` in the application repository that will use the runners.
 

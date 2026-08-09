@@ -20,13 +20,27 @@ Install the app on the target organization or repository and record:
 
 ## Create the Kubernetes secret
 
+Use the included helper so the PEM stays outside Git while the namespace and secret are created idempotently:
+
 ```bash
-kubectl create namespace arc-runners --dry-run=client -o yaml | kubectl apply -f -
-kubectl create secret generic github-app-secret \
+./scripts/create-github-app.sh \
   --namespace arc-runners \
-  --from-literal=github_app_id='123456' \
-  --from-literal=github_app_installation_id='7890123' \
-  --from-file=github_app_private_key=./github-app.pem
+  --secret-name github-app-secret \
+  --app-id 123456 \
+  --installation-id 7890123 \
+  --private-key-file ./github-app.pem
+```
+
+To preview the generated YAML without applying it:
+
+```bash
+./scripts/create-github-app.sh \
+  --namespace arc-runners \
+  --secret-name github-app-secret \
+  --app-id 123456 \
+  --installation-id 7890123 \
+  --private-key-file ./github-app.pem \
+  --dry-run
 ```
 
 Reference the secret from each runner scale set:
@@ -37,7 +51,7 @@ githubConfigSecret: github-app-secret
 
 ## Automate secret creation
 
-The included helper reads environment variables and creates or updates the secret:
+The helper also supports environment variables for automation:
 
 ```bash
 export GITHUB_APP_ID=123456
