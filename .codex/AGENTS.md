@@ -1,6 +1,6 @@
 # ECC for Codex CLI
 
-This supplements the root `AGENTS.md` with a repo-local ECC baseline.
+This provides a repo-local ECC baseline for Codex CLI in this repository.
 
 ## Repo Skill
 
@@ -23,4 +23,4 @@ The generated baseline enables GitHub, Context7, Exa, Memory, Playwright, and Se
 
 - No dedicated workflow command files were generated for this repo.
 
-Use these workflow files as reusable task scaffolds when the detected repository workflows recur.
+If workflow command files are added later, use them as reusable task scaffolds when the detected repository workflows recur.
