@@ -1,6 +1,6 @@
 ---
 name: kubernetes-platform-conventions
-description: Development conventions and patterns for kubernetes-platform. TypeScript project with mixed commits.
+description: Development conventions and patterns for kubernetes-platform with mixed commits.
 ---
 
 # Kubernetes Platform Conventions
@@ -13,7 +13,7 @@ This skill teaches Claude the development patterns and conventions used in kuber
 
 ## Tech Stack
 
-- **Primary Language**: TypeScript
+- **Primary Language**: Not detected
 - **Architecture**: hybrid module organization
 - **Test Location**: separate
 

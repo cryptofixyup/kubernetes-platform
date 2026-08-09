@@ -47,10 +47,8 @@
       {
         "id": "security-evidence",
         "label": "Security evidence",
-        "status": "present",
-        "evidence": [
-          "docs/SECURITY.md"
-        ],
+        "status": "missing",
+        "evidence": [],
         "recommendation": "Attach security evidence such as SBOMs, SARIF, audit reports, or AgentShield evidence packs."
       },
       {

@@ -97,10 +97,9 @@ source_repo: https://github.com/cryptofixyup/kubernetes-platform
 
 ## Action
 
-Place tests in the tests/ or __tests__/ directory, mirroring src structure
+Follow the repository's existing test placement patterns if tests are added
 
 ## Evidence
 
-- Separate test directory pattern detected
-- Tests live in dedicated test folders
-
+- No dedicated tests/ or __tests__/ directories are present in the current snapshot
+- Test folder convention is not established in the current snapshot
