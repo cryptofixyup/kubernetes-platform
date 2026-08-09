@@ -2,7 +2,7 @@ import asyncio
 from fastapi import Depends, FastAPI, Header
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from langchain import init_chat_model
+from langchain.chat_models import init_chat_model
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.prebuilt import create_react_agent
 

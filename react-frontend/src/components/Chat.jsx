@@ -86,6 +86,19 @@ export default function Chat({ authToken, userId }) {
       }
     } catch (error) {
       console.error("Fetch error:", error);
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        const lastMessage = newMessages[newMessages.length - 1];
+
+        if (lastMessage?.role === "assistant" && !lastMessage.content) {
+          newMessages[newMessages.length - 1] = {
+            role: "assistant",
+            content: "Unable to complete the request.",
+          };
+        }
+
+        return newMessages;
+      });
     } finally {
       setIsStreaming(false);
     }
