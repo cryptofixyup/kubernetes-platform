@@ -1,0 +1,6 @@
+interface:
+  display_name: "Kubernetes Platform"
+  short_description: "Repo-specific patterns and workflows for kubernetes-platform"
+  default_prompt: "Use the kubernetes-platform repo skill to follow existing architecture, testing, and workflow conventions."
+policy:
+  allow_implicit_invocation: true
