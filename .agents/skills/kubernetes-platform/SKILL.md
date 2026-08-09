@@ -15,7 +15,7 @@ This skill teaches Claude the development patterns and conventions used in kuber
 
 - **Primary Language**: Not detected
 - **Architecture**: hybrid module organization
-- **Test Location**: separate
+- **Test Location**: Not detected
 
 ## When to Use This Skill
 
