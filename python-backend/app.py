@@ -7,6 +7,7 @@ from langgraph.prebuilt import create_react_agent
 
 app = FastAPI()
 checkpointer = InMemorySaver()
+agent_cache = {}
 
 
 class UserProfile(BaseModel):
@@ -29,6 +30,11 @@ async def get_verified_user(
 
 
 def get_agent_for_user(user: UserProfile):
+    cache_key = (user.tier, user.language)
+
+    if cache_key in agent_cache:
+        return agent_cache[cache_key]
+
     model_name = (
         "anthropic:claude-3-5-sonnet-latest"
         if user.tier in ["pro", "enterprise"]
@@ -36,7 +42,9 @@ def get_agent_for_user(user: UserProfile):
     )
     model = init_chat_model(model_name, temperature=0.1)
     prompt = f"You are a helpful AI. Reply in {user.language}."
-    return create_react_agent(model=model, tools=[], prompt=prompt, checkpointer=checkpointer)
+    agent = create_react_agent(model=model, tools=[], prompt=prompt, checkpointer=checkpointer)
+    agent_cache[cache_key] = agent
+    return agent
 
 
 async def stream_generator(agent, question: str, thread_id: str):

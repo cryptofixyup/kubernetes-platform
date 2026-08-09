@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
-export default function Chat({ authToken = "test_token", userId = "user_123" }) {
+export default function Chat({ authToken, userId }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+  const sessionId = useMemo(
+    () => (globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : String(Date.now())),
+    [],
+  );
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
+  if (!authToken || !userId) {
+    return <div>Missing chat authentication context.</div>;
+  }
 
   const handleSend = async () => {
     if (!input.trim() || isStreaming) {
@@ -18,7 +26,7 @@ export default function Chat({ authToken = "test_token", userId = "user_123" }) 
     setInput("");
     setIsStreaming(true);
 
-    const threadId = `session_${userId}`;
+    const threadId = `session_${userId}_${sessionId}`;
 
     try {
       const response = await fetch(`${backendUrl}/api/v1/chat/stream`, {
