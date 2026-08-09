@@ -9,20 +9,20 @@ description: Development conventions and patterns for kubernetes-platform with m
 
 ## Overview
 
-This skill teaches Claude the development patterns and conventions used in kubernetes-platform.
+This skill captures the limited repository conventions detectable in the current kubernetes-platform snapshot.
 
 ## Tech Stack
 
 - **Primary Language**: Not detected
-- **Architecture**: hybrid module organization
+- **Architecture**: Not established in current snapshot
 - **Test Location**: Not detected
 
 ## When to Use This Skill
 
 Activate this skill when:
 - Making changes to this repository
-- Adding new features following established patterns
-- Writing tests that match project conventions
+- Updating generated repository guidance to stay aligned with the current snapshot
+- Adding new files while checking nearby files for concrete conventions
 - Creating commits with proper message format
 
 ## Commit Conventions
@@ -56,49 +56,18 @@ Initial plan
 
 ## Architecture
 
-### Project Structure: Single Package
+### Project Structure: Not established
 
-This project uses **hybrid** module organization.
+The current repository snapshot is primarily generated configuration and documentation, so no application module layout is established yet.
 
 ### Guidelines
 
-- This project uses a hybrid organization
-- Follow existing patterns when adding new code
+- Verify conventions against nearby files before introducing new patterns
+- Follow explicit repository-local patterns when they exist
 
 ## Code Style
 
-### Language: TypeScript
-
-### Naming Conventions
-
-| Element | Convention |
-|---------|------------|
-| Files | kebab-case |
-| Functions | camelCase |
-| Classes | PascalCase |
-| Constants | SCREAMING_SNAKE_CASE |
-
-### Import Style: Relative Imports
-
-### Export Style: Named Exports
-
-
-*Preferred import style*
-
-```typescript
-// Use relative imports
-import { Button } from '../components/Button'
-import { useAuth } from './hooks/useAuth'
-```
-
-*Preferred export style*
-
-```typescript
-// Use named exports
-export function calculateTotal() { ... }
-export const TAX_RATE = 0.1
-export interface Order { ... }
-```
+Language-specific style conventions are not established in the current repository snapshot.
 
 ## Best Practices
 
@@ -106,12 +75,11 @@ Based on analysis of the codebase, follow these practices:
 
 ### Do
 
-- Use kebab-case for file names
-- Prefer named exports
+- Verify patterns against the files you are changing before extending them
 
 ### Don't
 
-- Don't deviate from established patterns without discussion
+- Don't infer language-specific conventions without supporting files
 
 ---
 

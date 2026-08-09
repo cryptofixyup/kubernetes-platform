@@ -45,46 +45,6 @@ Use kebab-case naming convention
 - Dominant pattern: kebab-case
 
 ---
-id: kubernetes-platform-import-relative
-trigger: "when importing modules"
-confidence: 0.75
-domain: code-style
-source: repo-analysis
-source_repo: https://github.com/cryptofixyup/kubernetes-platform
----
-
-# Kubernetes Platform Import Relative
-
-## Action
-
-Use relative imports for project files
-
-## Evidence
-
-- Import analysis shows relative import pattern
-- Example: import { x } from '../lib/x'
-
----
-id: kubernetes-platform-export-style
-trigger: "when exporting from a module"
-confidence: 0.7
-domain: code-style
-source: repo-analysis
-source_repo: https://github.com/cryptofixyup/kubernetes-platform
----
-
-# Kubernetes Platform Export Style
-
-## Action
-
-Prefer named exports
-
-## Evidence
-
-- Export pattern analysis
-- Dominant style: named
-
----
 id: kubernetes-platform-test-separate
 trigger: "when writing tests"
 confidence: 0.8
