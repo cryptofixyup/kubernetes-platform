@@ -25,7 +25,7 @@ Key settings:
 - `runnerScaleSetName: supabase-runners`
 - `containerMode.type: dind`
 - `minRunners: 0`
-- `maxRunners: 6`
+- `maxRunners: 5`
 - higher CPU, memory, and ephemeral storage reservations
 
 ## Installation commands

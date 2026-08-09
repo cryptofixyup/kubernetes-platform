@@ -16,7 +16,7 @@ Plan separately for the controller and for the runner pools.
 | --- | --- | --- |
 | ARC controller | 0.25 vCPU / 256Mi | 2 replicas, 0.5 vCPU / 512Mi each |
 | `general-runners` pod | 1 vCPU / 2Gi / 4Gi ephemeral storage | 1-2 warm runners |
-| `supabase-runners` pod | 2 vCPU / 6Gi / 20Gi ephemeral storage | dedicated node pool preferred |
+| `supabase-runners` pod | 2 vCPU / 4Gi / 20Gi ephemeral storage | dedicated node pool preferred |
 | DinD sidecar | included in runner pod sizing | reserve extra 2-4Gi memory headroom |
 
 Use a separate node pool for `supabase-runners` if your cluster also runs latency-sensitive workloads.
