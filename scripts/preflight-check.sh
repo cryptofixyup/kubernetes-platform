@@ -66,7 +66,6 @@ network_probe() {
     "https://ghcr.io"
   )
   local phase=
-  local attempt=
 
   kubectl delete pod "$pod_name" -n "$namespace" --ignore-not-found >/dev/null 2>&1 || true
 
@@ -84,7 +83,7 @@ network_probe() {
     return
   fi
 
-  for attempt in {1..24}; do
+  for _ in {1..24}; do
     phase=$(kubectl get pod "$pod_name" -n "$namespace" -o jsonpath='{.status.phase}' 2>/dev/null || true)
     case "$phase" in
       Succeeded)
@@ -112,7 +111,6 @@ for tool in "${required_tools[@]}"; do
     ok "$tool found"
   else
     error "$tool not found"
-    fail=1
   fi
 done
 

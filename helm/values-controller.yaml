@@ -1,8 +1,8 @@
 replicaCount: 2
 
 image:
-  repository: ghcr.io/actions/gha-runner-scale-set-controller@sha256:3081ba15c41f0aa791058dedd2a7406fece24c9aeaa94956c268e5099427a452
-  tag: ""
+  repository: ghcr.io/actions/gha-runner-scale-set-controller
+  tag: 0.14.2
 
 resources:
   requests:

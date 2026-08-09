@@ -35,7 +35,13 @@ helm show values --version 0.14.2 oci://ghcr.io/actions/actions-runner-controlle
 ## Install the controller
 
 ```bash
-helm upgrade --install arc       --namespace arc-systems       --create-namespace       --version 0.14.2       -f helm/values-controller.yaml       oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+cat >/tmp/arc-controller-digest-post-renderer.sh <<'EOF'
+#!/usr/bin/env bash
+sed 's#ghcr.io/actions/gha-runner-scale-set-controller:0.14.2#ghcr.io/actions/gha-runner-scale-set-controller@sha256:3081ba15c41f0aa791058dedd2a7406fece24c9aeaa94956c268e5099427a452#g' /dev/stdin
+EOF
+chmod +x /tmp/arc-controller-digest-post-renderer.sh
+
+helm upgrade --install arc       --namespace arc-systems       --create-namespace       --version 0.14.2       --post-renderer /tmp/arc-controller-digest-post-renderer.sh       -f helm/values-controller.yaml       oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
 ```
 
 The bundled [`helm/values-controller.yaml`](../../helm/values-controller.yaml) enables:
@@ -44,7 +50,7 @@ The bundled [`helm/values-controller.yaml`](../../helm/values-controller.yaml) e
 - Metrics endpoints for Prometheus scraping.
 - Readiness and liveness health probes.
 - Conservative resource requests.
-- Controller image pinning by digest (`ghcr.io/actions/gha-runner-scale-set-controller@sha256:3081ba15c41f0aa791058dedd2a7406fece24c9aeaa94956c268e5099427a452`).
+- A tag-stable controller values file plus a post-renderer that pins the deployed image by digest (`ghcr.io/actions/gha-runner-scale-set-controller@sha256:3081ba15c41f0aa791058dedd2a7406fece24c9aeaa94956c268e5099427a452`).
 
 ## Install runner scale sets
 

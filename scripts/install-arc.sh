@@ -6,11 +6,35 @@ CONTROLLER_NS=${ARC_CONTROLLER_NAMESPACE:-arc-systems}
 RUNNER_NS=${ARC_RUNNER_NAMESPACE:-arc-runners}
 SECRET_NAME=${GITHUB_SECRET_NAME:-github-app-secret}
 ARC_CHART_VERSION=${ARC_CHART_VERSION:-0.14.2}
+ARC_CONTROLLER_IMAGE_REPOSITORY=${ARC_CONTROLLER_IMAGE_REPOSITORY:-ghcr.io/actions/gha-runner-scale-set-controller}
+ARC_CONTROLLER_IMAGE_TAG=${ARC_CONTROLLER_IMAGE_TAG:-0.14.2}
+ARC_CONTROLLER_IMAGE_DIGEST=${ARC_CONTROLLER_IMAGE_DIGEST:-sha256:3081ba15c41f0aa791058dedd2a7406fece24c9aeaa94956c268e5099427a452}
 RUNNER_LABELS_KEY=${RUNNER_LABELS_KEY:-runnerScaleSetLabels}
 LEGACY_LABELS_KEY=${LEGACY_LABELS_KEY:-$(printf '%s%s' 'scale' 'SetLabels')}
 
 TMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TMP_DIR"' EXIT
+
+CONTROLLER_POST_RENDERER="$TMP_DIR/controller-post-renderer.sh"
+cat >"$CONTROLLER_POST_RENDERER" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+
+input_file=\$(mktemp)
+trap 'rm -f "\$input_file"' EXIT
+cat >"\$input_file"
+
+expected_image="${ARC_CONTROLLER_IMAGE_REPOSITORY}:${ARC_CONTROLLER_IMAGE_TAG}"
+pinned_image="${ARC_CONTROLLER_IMAGE_REPOSITORY}@${ARC_CONTROLLER_IMAGE_DIGEST}"
+
+if ! grep -q "\$expected_image" "\$input_file"; then
+  echo "Expected controller image '\$expected_image' not found in rendered manifest." >&2
+  exit 1
+fi
+
+sed "s#\$expected_image#\$pinned_image#g" "\$input_file"
+EOF
+chmod +x "$CONTROLLER_POST_RENDERER"
 
 prepare_runner_values() {
   local source_file=$1
@@ -51,6 +75,7 @@ helm upgrade --install arc \
   --namespace "$CONTROLLER_NS" \
   --create-namespace \
   --version "$ARC_CHART_VERSION" \
+  --post-renderer "$CONTROLLER_POST_RENDERER" \
   -f "$ROOT_DIR/helm/values-controller.yaml" \
   oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
 
