@@ -1,0 +1,55 @@
+name: supabase-matrix
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: lint
+            runner: general-runners
+            command: npm run lint --if-present
+            bootstrap: ''
+            teardown: ''
+          - name: unit
+            runner: general-runners
+            command: npm test -- --runInBand
+            bootstrap: ''
+            teardown: ''
+          - name: integration
+            runner: supabase-runners
+            command: npm run test:integration --if-present
+            bootstrap: supabase start -x studio,inbucket,imgproxy
+            teardown: supabase stop --no-backup || true
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - uses: supabase/setup-cli@v1
+        if: ${{ matrix.bootstrap != '' }}
+        with:
+          version: latest
+
+      - run: npm ci
+
+      - name: Optional bootstrap
+        if: ${{ matrix.bootstrap != '' }}
+        run: ${{ matrix.bootstrap }}
+
+      - name: Execute job command
+        run: ${{ matrix.command }}
+
+      - name: Optional teardown
+        if: ${{ always() && matrix.teardown != '' }}
+        run: ${{ matrix.teardown }}
