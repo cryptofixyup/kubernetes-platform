@@ -26,7 +26,7 @@ services:
     build: ./python-backend
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
-      - DATABASE_URL=postgresql://postgres-db/saas_db
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@postgres-db:5432/${POSTGRES_DB:-saas_db}
     depends_on:
       - postgres-db
     restart: unless-stopped
@@ -35,14 +35,13 @@ services:
     image: redis:alpine
     ports:
       - "6379:6379"
-    command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "noeviction"]
 
   postgres-db:
     image: ankane/pgvector:latest
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: saas_db
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-saas_db}
     volumes:
       - pgdata:/var/lib/postgresql/data
 

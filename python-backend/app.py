@@ -2,8 +2,8 @@ from fastapi import Depends, FastAPI, Header
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from langchain.chat_models import init_chat_model
-from langchain.agents import create_agent
 from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.prebuilt import create_react_agent
 
 app = FastAPI()
 checkpointer = InMemorySaver()
@@ -13,6 +13,11 @@ class UserProfile(BaseModel):
     user_id: str
     tier: str
     language: str
+
+
+class ChatRequest(BaseModel):
+    thread_id: str
+    question: str
 
 
 async def get_verified_user(
@@ -31,7 +36,7 @@ def get_agent_for_user(user: UserProfile):
     )
     model = init_chat_model(model_name, temperature=0.1)
     prompt = f"You are a helpful AI. Reply in {user.language}."
-    return create_agent(model=model, tools=[], system_prompt=prompt, checkpointer=checkpointer)
+    return create_react_agent(model=model, tools=[], prompt=prompt, checkpointer=checkpointer)
 
 
 async def stream_generator(agent, question: str, thread_id: str):
@@ -49,14 +54,13 @@ async def stream_generator(agent, question: str, thread_id: str):
         yield f"data: [ERROR] {str(exc)}\n\n"
 
 
-@app.get("/api/v1/chat/stream")
+@app.post("/api/v1/chat/stream")
 async def chat_stream(
-    thread_id: str,
-    question: str,
+    payload: ChatRequest,
     user: UserProfile = Depends(get_verified_user),
 ):
     agent = get_agent_for_user(user)
     return StreamingResponse(
-        stream_generator(agent, question, thread_id),
+        stream_generator(agent, payload.question, payload.thread_id),
         media_type="text/event-stream",
     )

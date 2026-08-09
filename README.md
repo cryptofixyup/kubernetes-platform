@@ -16,6 +16,9 @@ Microservice repository with a Bun gateway, a Python AI backend, and a React fro
    - `STRIPE_SECRET_KEY`
    - `STRIPE_WEBHOOK_SECRET`
    - `ANTHROPIC_API_KEY`
+   - `POSTGRES_USER` (optional, defaults to `user`)
+   - `POSTGRES_PASSWORD` (optional, defaults to `password`)
+   - `POSTGRES_DB` (optional, defaults to `saas_db`)
 2. Run:
 
 ```sh
@@ -34,5 +37,5 @@ docker-compose up --build
 
 - The Bun gateway proxies authenticated chat requests to the Python backend.
 - Stripe webhooks are queued through Redis before asynchronous worker processing.
-- The React frontend file is a minimal component scaffold and is not yet wired into a full frontend build.
+- The React frontend file is a minimal component scaffold and expects `VITE_BACKEND_URL` when used outside local development.
 - The `.claude`, `.codex`, and `.agents` directories remain repository tooling metadata.

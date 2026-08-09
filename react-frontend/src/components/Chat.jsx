@@ -5,7 +5,7 @@ export default function Chat({ authToken = "test_token", userId = "user_123" }) 
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
 
-  const backendUrl = "http://localhost:3000";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   const handleSend = async () => {
     if (!input.trim() || isStreaming) {
@@ -21,13 +21,17 @@ export default function Chat({ authToken = "test_token", userId = "user_123" }) 
     const threadId = `session_${userId}`;
 
     try {
-      const response = await fetch(
-        `${backendUrl}/api/v1/chat/stream?thread_id=${threadId}&question=${encodeURIComponent(userMsg.content)}`,
-        {
-          method: "GET",
-          headers: { Authorization: "Bearer " + authToken },
+      const response = await fetch(`${backendUrl}/api/v1/chat/stream`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + authToken,
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          thread_id: threadId,
+          question: userMsg.content,
+        }),
+      });
 
       if (!response.ok || !response.body) {
         throw new Error(`Request failed with status ${response.status}`);
