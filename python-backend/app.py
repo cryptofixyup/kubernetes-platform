@@ -1,3 +1,5 @@
+from threading import Lock
+
 from fastapi import Depends, FastAPI, Header
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -8,6 +10,7 @@ from langgraph.prebuilt import create_react_agent
 app = FastAPI()
 checkpointer = InMemorySaver()
 agent_cache = {}
+agent_cache_lock = Lock()
 
 
 class UserProfile(BaseModel):
@@ -32,19 +35,20 @@ async def get_verified_user(
 def get_agent_for_user(user: UserProfile):
     cache_key = (user.tier, user.language)
 
-    if cache_key in agent_cache:
-        return agent_cache[cache_key]
+    with agent_cache_lock:
+        if cache_key in agent_cache:
+            return agent_cache[cache_key]
 
-    model_name = (
-        "anthropic:claude-3-5-sonnet-latest"
-        if user.tier in ["pro", "enterprise"]
-        else "anthropic:claude-3-haiku-20240307"
-    )
-    model = init_chat_model(model_name, temperature=0.1)
-    prompt = f"You are a helpful AI. Reply in {user.language}."
-    agent = create_react_agent(model=model, tools=[], prompt=prompt, checkpointer=checkpointer)
-    agent_cache[cache_key] = agent
-    return agent
+        model_name = (
+            "anthropic:claude-3-5-sonnet-latest"
+            if user.tier in ["pro", "enterprise"]
+            else "anthropic:claude-3-haiku-20240307"
+        )
+        model = init_chat_model(model_name, temperature=0.1)
+        prompt = f"You are a helpful AI. Reply in {user.language}."
+        agent = create_react_agent(model=model, tools=[], prompt=prompt, checkpointer=checkpointer)
+        agent_cache[cache_key] = agent
+        return agent
 
 
 async def stream_generator(agent, question: str, thread_id: str):
