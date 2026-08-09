@@ -12,6 +12,7 @@ Use for lint, unit tests, type checks, and packaging.
 Key settings:
 
 - `runnerScaleSetName: general-runners`
+- `runnerScaleSetLabels: [general-runners]`
 - `minRunners: 1`
 - `maxRunners: 10`
 - no DinD sidecar
@@ -23,18 +24,22 @@ Use only for jobs that need `supabase start`, Docker builds, or service containe
 Key settings:
 
 - `runnerScaleSetName: supabase-runners`
+- `runnerScaleSetLabels: [supabase-runners, docker, supabase]`
 - `containerMode.type: dind`
 - `minRunners: 0`
 - `maxRunners: 5`
+- `requests.memory: 8Gi`
 - higher CPU, memory, and ephemeral storage reservations
+
+ARC `containerMode.type: dind` runs a dual-container pod: the GitHub runner container plus a privileged Docker daemon container. The bundled values reserve memory for both so `supabase start` can absorb image-pull and service-start bursts without starving the daemon.
 
 ## Installation commands
 
 ```bash
-helm upgrade --install general-runners       --namespace arc-runners       -f helm/values-general-runners.yaml       oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
-
-helm upgrade --install supabase-runners       --namespace arc-runners       -f helm/values-supabase-runners.yaml       oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+./scripts/install-arc.sh
 ```
+
+The repository values files use `runnerScaleSetLabels` consistently. `scripts/install-arc.sh` keeps that naming intact in this guide while translating to the current ARC `0.14.2` chart input during installation.
 
 ## Scale behavior
 
@@ -61,3 +66,4 @@ kubectl get pods -n arc-runners -w
 - Start `supabase-runners` at `minRunners: 0` and add registry caching before increasing warm capacity.
 - Pin runners to a dedicated node pool with taints if DinD jobs compete with app workloads.
 - Add image pre-pull DaemonSets for Supabase images when cold starts dominate test time.
+- Do not reduce Supabase memory requests aggressively in production; the Docker daemon container often OOMs before GitHub job logs make the cause obvious.
