@@ -1,0 +1,49 @@
+services:
+  bun-gateway:
+    build: ./bun-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PYTHON_BACKEND_URL=http://python-ai:8000
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - REDIS_URL=redis://redis-cache:6379
+    depends_on:
+      - python-ai
+      - redis-cache
+    restart: unless-stopped
+
+  bun-worker:
+    build: ./bun-gateway
+    command: ["bun", "run", "src/worker.ts"]
+    environment:
+      - REDIS_URL=redis://redis-cache:6379
+    depends_on:
+      - redis-cache
+    restart: unless-stopped
+
+  python-ai:
+    build: ./python-backend
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@postgres-db:5432/${POSTGRES_DB:-saas_db}
+    depends_on:
+      - postgres-db
+    restart: unless-stopped
+
+  redis-cache:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  postgres-db:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-saas_db}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

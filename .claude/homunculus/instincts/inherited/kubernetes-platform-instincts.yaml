@@ -1,0 +1,65 @@
+# Instincts generated from https://github.com/cryptofixyup/kubernetes-platform
+# Generated: 2026-08-09T04:09:37.920Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: kubernetes-platform-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/cryptofixyup/kubernetes-platform
+---
+
+# Kubernetes Platform Commit Length
+
+## Action
+
+Keep commit messages concise (~27 characters)
+
+## Evidence
+
+- Average commit message length: 27 chars
+- Based on 2 commits
+
+---
+id: kubernetes-platform-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/cryptofixyup/kubernetes-platform
+---
+
+# Kubernetes Platform Naming Files
+
+## Action
+
+Use kebab-case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: kebab-case
+
+---
+id: kubernetes-platform-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/cryptofixyup/kubernetes-platform
+---
+
+# Kubernetes Platform Test Separate
+
+## Action
+
+Follow the repository's existing test placement patterns if tests are added
+
+## Evidence
+
+- No dedicated tests/ or __tests__/ directories are present in the current snapshot
+- Test folder convention is not established in the current snapshot

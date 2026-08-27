@@ -1,0 +1,14 @@
+{
+  "name": "bun-gateway",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "bun run src/server.ts",
+    "worker": "bun run src/worker.ts"
+  },
+  "dependencies": {
+    "bullmq": "^5.7.8",
+    "ioredis": "^5.4.1",
+    "jose": "^5.2.4",
+    "stripe": "^15.8.0"
+  }
+}
